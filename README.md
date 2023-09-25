@@ -16,6 +16,7 @@
   - attestation이 하나도 저장되지 않는 비콘블록
   - 이더리움 생태계의 보상 구조
   - 검증자의 보상 구조 
+  - ultra-sound money
   
 
 - [이더리움 토막상식(2-1)](https://github.com/boyd-dev/eth-trivia/tree/main/02)
