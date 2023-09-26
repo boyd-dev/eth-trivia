@@ -29,4 +29,8 @@
   - 최대 유효잔액을 늘리자는 제안(EIP-7251)
   - 이더리움 성능개선 - 샤딩(Sharding)
   - proto-danksharding
-  -  
+  - 롤업 데이터(블롭) 저장 기간
+  - 롤업의 종류  
+  - ZK롤업의 유형
+
+  [스도쿠와 영지식증명](https://github.com/boyd-dev/eth-trivia/tree/main/03)
