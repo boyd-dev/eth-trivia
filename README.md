@@ -33,4 +33,4 @@
   - 롤업의 종류  
   - ZK롤업의 유형
 
-  [스도쿠와 영지식증명](https://github.com/boyd-dev/eth-trivia/tree/main/03)
+- [스도쿠와 영지식증명](https://github.com/boyd-dev/eth-trivia/tree/main/03)
