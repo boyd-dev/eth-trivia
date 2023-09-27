@@ -22,3 +22,4 @@ Aviv Zohar - "The Incredible Machine"의 일부 번역
  
 zk-SNIPM은 "Non-interactive"를 가능하게 한 것이다. 이를 위해 trusted setup이라는 과정을 거쳐야만 한다. 그렇지 않으면 찰리에 의해(또는 찰리가 아닌 다른 사람이 찰리가 알고 있는 것을 훔칠 수 있다) 영지식증명의 보안이 깨질 수 있다. 여러 사람이 trusted setup에 참여하는 방식을 MPC(multiparty computation)라고 할 수 있다.  
 
+[Home](../README.md)
