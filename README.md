@@ -32,5 +32,6 @@
   - 롤업 데이터(블롭) 저장 기간
   - 롤업의 종류  
   - ZK롤업의 유형
+  - "in-protocol" PBS 
 
-- [스도쿠와 영지식증명](https://github.com/boyd-dev/eth-trivia/tree/main/03)
+- [영지식증명 스도쿠](https://github.com/boyd-dev/eth-trivia/tree/main/03)
