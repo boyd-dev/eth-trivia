@@ -1,4 +1,4 @@
-## 이더리움 Trivia 
+## 이더리움 Trivia, Wiki 
 
 - [이더리움 토막상식(1-1)](https://github.com/boyd-dev/eth-trivia/blob/main/01)
   - 이더리움 ICO는 언제?
