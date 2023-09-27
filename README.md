@@ -33,5 +33,6 @@
   - 롤업의 종류  
   - ZK롤업의 유형
   - "in-protocol" PBS 
+  - 검증자가 되는 과정  
 
 - [영지식증명 스도쿠](https://github.com/boyd-dev/eth-trivia/tree/main/03)
