@@ -1,4 +1,4 @@
-## 스도쿠와 영지식증명  
+## 영지식증명 스도쿠  
 Aviv Zohar - "The Incredible Machine"의 일부 번역  
 [The Incredible Machine](https://medium.com/qed-it/the-incredible-machine-4d1270d7363a)  
 
