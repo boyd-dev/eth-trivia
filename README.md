@@ -31,7 +31,7 @@
   - proto-danksharding
   - 롤업 데이터(블롭) 저장 기간
   - 롤업의 종류  
-  - ZK롤업의 유형
+  - ZK 롤업의 유형
   - "in-protocol" PBS 
   - 검증자 활동 과정  
   - 슬래시 조건
