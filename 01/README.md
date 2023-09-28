@@ -116,9 +116,9 @@ attestation을 얼마나 많이 저장했는지에 따라 블록 생성 보상�
 MEV-geth와 마찬가지로 검증노드들의 MEV-boost의 채택 비율은 거의 80-90%에 이르기 때문에 이더리움의 장기 로드맵 중 하나인 "PBS(Proposer-Builder Separation)"은 이미 실행 중이라고 볼 수도 있다. 다만 이더리움 밖에서 이루어지기 때문에 트랜잭션 검열 등의 문제가 제기되기도 한다.  
 결과적으로 이더리움 생태계에서 발생하는 수익들은 대략 아래와 같이 정리할 수 있다:  
 
-    - 블록 보상(검증보상+트랜잭션 수수료+MEV블록보상) - Validator(Proposer)
-    - MEV 블록 생성 및 릴레이 수수료 - Block builder, Relayer
-    - MEV 수익 - Searcher 
+    - 블록 보상(검증보상+트랜잭션 수수료+MEV블록보상) ⇒ Validator(Proposer)
+    - MEV 블록 생성 및 릴레이 수수료 ⇒ Block builder, Relayer
+    - MEV 수익 ⇒ Searcher 
 
     검증자는 블록 빌더로부터 MEV블록을 받아서 어느 정도의 부가적인 수익을 얻을 수 있을까? 운이 좋으면 [337Ξ를 받은 검증자](https://beaconcha.in/block/15802413)가 나올 수도 있다. 
     현재 많은 블록 빌더와 릴레이가 존재한다. 대략적인 통계는 아래 사이트를 참조.  
