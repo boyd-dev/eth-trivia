@@ -34,5 +34,6 @@
   - ZK롤업의 유형
   - "in-protocol" PBS 
   - 검증자 활동 과정  
+  - 슬래시 조건
 
 - [영지식증명 스도쿠](https://github.com/boyd-dev/eth-trivia/tree/main/03)
