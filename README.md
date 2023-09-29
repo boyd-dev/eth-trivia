@@ -35,5 +35,6 @@
   - "in-protocol" PBS 
   - 검증자 활동 과정  
   - 슬래시 조건
+  - MEV-boost 동작 방식
 
 - [영지식증명 스도쿠](https://github.com/boyd-dev/eth-trivia/tree/main/03)
