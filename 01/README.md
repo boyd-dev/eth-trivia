@@ -90,8 +90,8 @@ nonce는 `0x0000000000000000`으로 고정되었고 mixHash가 비콘체인에�
 
 11. 비콘체인 합의 방식  
 이더리움의 비콘체인은 크게 두 가지 프로토콜에 의해 데이터에 합의한다. 블록체인의 가장 최근 블록을 결정하는 LMD-GHOST와 epoch(약 6.4분) 마다 지분을 예치한 검증자들 66% 이상(supermajority)이 justified-finalized로 데이터를 확정해나가는 Casper FFG를 통해 체인을 만들어간다.  
-fork choice rule에 해당하는 LMD-GHOST는 소위 말하는 "Liveness"와 관련이 있다. 블록을 생성하는 검증자는 LMD-GHOST에 의해 하나의 체인을 결정하고 이어나간다. 이것은 비콘 체인에서 발생하는 메시지들(attestation)은 결국 블록에 저장될 수 있다는 것을 의미한다. 이것을 "Something good eventually happens"라고 표현한다.  
-FFG는 "Safety"와 관련이 있다. 블록체인에 기록된 데이터들은 프로토콜을 준수하는 대다수의 검증자(supermajority)들에 의해 2단계(justified-finalized)에 걸쳐 확정되므로 나중에 삭제되거나 변경되는 "나쁜 일(bad things)"은 일어나지 않는다. 이것을 "Bad things do not happen"이라고 표현한다.
+fork choice rule에 해당하는 LMD-GHOST는 소위 말하는 "Liveness"와 관련이 있다. 블록을 생성하는 검증자는 LMD-GHOST에 의해 하나의 체인을 결정하고 이어나간다. 이것은 비콘 체인에서 발생하는 메시지들(attestation)은 결국 블록에 저장될 수 있다는 것을 의미한다. 그래서 Liveness를 "Something good eventually happens"라고 표현한다.  
+FFG는 "Safety"와 관련이 있다. 블록체인에 기록된 데이터들은 프로토콜을 준수하는 대다수의 검증자(supermajority)들에 의해 2단계(justified-finalized)에 걸쳐 확정되므로 나중에 삭제되거나 변경되는 "나쁜 일(bad things)"은 일어나지 않는다. Safety는 "Bad things do not happen"이라고 표현한다.
 이 두 개의 프로토콜을 합쳐서 "Gasper"라고 부르기도 한다.  
 
     모든 검증자들은 12초 단위로 32개의 슬롯에 배치되어 해당 슬롯에서 만들어지는 블록을 검증해야 한다. 32개의 슬롯이 1 epoch이 되므로 6.4분 마다 검증을 수행해야 하는 것이다. 또 각 슬롯마다 블록 생성자가 슈도랜덤하게 선택되므로 6.4분마다 32개의 검증자가 블록 생성자가 된다. 지분증명 전환 후에는 실행계층의 블록(블록이라기 보다는 비콘 블록에 포함된 payload 형태)도 같이 검증하는데 작업증명이 했던 검증을 제외한 나머지 유효성 검사를 수행한다.
