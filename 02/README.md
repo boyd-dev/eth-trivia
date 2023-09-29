@@ -133,7 +133,33 @@ attest를 하지 않아서 소량의 이더가 차감되는 것과는 다르게 
     - double votes 검증자 규칙 위반 - 두 개의 상이한 블록에 LMD-GHOST vote(Nothing at stake)  
    
      기본적으로 위의 조건들은 분기를 유발할 수 있는 "equivocation" 일구이언(一口二言)이라고 할 수 있다. 이들 중 하나라도 해당하면 즉시 벌금 약 1Ξ를 차감하고 완전히 exit 되기 전까지 계속 마이너스 보상을 부과한다.  
-   또 다수의 검증자들이 공모한 정황이 있는 경우 더 많은 이더를 벌금으로 부과될 수 있는데 슬래시된 시점의 전후로 약 36일 동안 슬래시된 검증자들이 일정 조건을 넘는 경우 거의 모든 이더를 차감 당할 수 있다.
+   또 다수의 검증자들이 공모한 정황이 있는 경우 더 많은 이더를 벌금으로 부과될 수 있는데 슬래시된 시점의 전후로 약 36일 동안 슬래시된 검증자들이 일정 조건을 넘는 경우 거의 모든 이더를 차감 당할 수 있다.  
+
+
+16. MEV-boost 동작 방식  
+현재 이더리움의 PBS는 MEV-boost로 이루어지고 있다. 앞서 말한 것처럼 프로토콜 외부에서 이해관계 주체들에 의해 동작하기 때문에 여러 "신뢰 가정(trust assumption)"을 전제하고 있는 부분이 많다.  (오픈 소스이긴 하지만) 검증자는 MEV-boost를 믿어야 하고 블록을 전달해주는 릴레이를 믿어야 하고, 블록 빌더가 블록을 제대로 만들었는지 믿어야 하고, Searcher들은 자신들의 트랜잭션을 잘 배치해줄 블록 빌더들을 믿어야 한다.  
+블록 빌더들은 공용 풀과 Searcher들이 의뢰한 트랜잭션들을 수집하여 "MEV" 블록을 만든다. 헤더와 바디가 있긴 하지만 블록이라고 하기보다는 Execution payload라고 부르고 있다. 블록 빌더는 다수의 릴레이에게 자신들의 블록을 전파하고 릴레이는 MEV-boost를 실행하는 블록 생성자에게 전달한다. 하지만 릴레이는 MEV-boost에게 트랜잭션이 있는 바디를 제외한 헤더만 넘긴다. 이것은 블록 생성자가 블록 빌더가 맞춰 놓은 트랜잭션 목록을 임의로 바꾸지 못하게 하기 위함이다. 
+블록 생성자는 전달받은 여러 헤더들 중 가장 이익이 되는 헤더를 선택하고 서명한 후 다시 릴레이에게 넘긴다. 릴레이는 서명된 헤더의 바디를 찾아 완전한 payload를 리턴하고 블록 생성자는 비로소 블록을 완성하고 네트워크에 전파한다. Bellatrix 하드포크 이후(The Merge)부터 비콘블록에 Execution payload가 포함되어 있다.  
+    ```
+    class BeaconBlockBody(Container):
+       randao_reveal: BLSSignature
+       eth1_data: Eth1Data  # Eth1 data vote
+       graffiti: Bytes32  # Arbitrary data
+       # Operations
+      proposer_slashings: List[ProposerSlashing, MAX_PROPOSER_SLASHINGS]
+      attester_slashings: List[AttesterSlashing, MAX_ATTESTER_SLASHINGS]
+      attestations: List[Attestation, MAX_ATTESTATIONS]
+      deposits: List[Deposit, MAX_DEPOSITS]
+      voluntary_exits: List[SignedVoluntaryExit, MAX_VOLUNTARY_EXITS]
+      sync_aggregate: SyncAggregate
+      # Execution
+      execution_payload: ExecutionPayload  # [New in Bellatrix]
+    ```
+    블록 생성자가 서명을 한 후에 payload의 트랜잭션이 공개되는 commit-reveal 방식이기 때문에 서명 후에는 트랜잭션의 순서를 조작할 수 없게 된다.  
+   2023년 4월에 발생한 소위 "equivocation attack"에서는 서명만 되면 무조건 트랜잭션이 저장된 바디가 공개되는 것을 악용한 것으로, 공격자가 서명은 했지만 헤더가 유효하지 않은 블록을(노골적으로 parent_root를 0으로 함) 일부러 전파하고 곧이어 자신의 트랜잭션으로 "샌드위치"한 유효한 블록을 만들어서 다시 전송했다. 앞서 전송된 블록은 어차피 유효하지 않은 블록이었기 때문에 모든 노드들이 거부하고 나중에 전파한 블록이 채택되었다.  
+   이 경우에 공격자는 해당 슬롯에서 두 개의 블록을 전파했기 때문에 double proposal이 아닐까? 알려진 바에 따르면 어차피 첫번째 블록은 아예 거부되었기 때문에 슬래셔에도 걸리지 않았다고 한다. 결국 사람이 수동으로 메시지를 전송하여 그 공격자를 슬래시했다. 하지만 슬래시 당하면서 낸 벌금에 비하면 얻은 이익이 워낙 크기 때문에 이것 또한 문제점으로 제기되었다.  
+
+
 
 
 [Home](../README.md)
