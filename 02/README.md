@@ -16,7 +16,7 @@
 
 2. Proposer boost  
 앞서 balancing attack은 LMD-GHOST가 검증자들의 최근 attestation만을 고려하는 특성을 이용한 것으로 검증 노드의 일정한 비율을 확보한 공격자가 자신의 attestation을 re-balancing하여 tie 상태를 의도적으로 지속하는 것이었다.  
-비콘 노드 클라이언트 개발팀들은 이러한 공격에 대응하기 위해 "Proposer boost"라는 기능을 추가했다. 단지 최근 메시지만을 고려하는 것이 아니라 블록 생성자 즉 Proposer가 제 시간에 블록을 생성한 경우 아직 그 블록에 대한 attestation이 확보되기 전에 "boost"해서 최근 블록으로 판단한다는 것이다. 이렇게 하면 설령 공격자가 상황에 따라 자신들의 attestation을 제어하더라도 정상적인 블록 생성자의 블록으로 canonical 체인을 형성할 수 있다.  
+비콘 노드 클라이언트 개발팀들은 이러한 공격에 대응하기 위해 "Proposer boost"라는 기능을 추가했다. 단지 최근 메시지만을 고려하는 것이 아니라 블록 생성자 즉 Proposer가 제시간에 블록을 생성한 경우 아직 그 블록에 대한 attestation이 확보되기 전에 "boost"해서 최근 블록으로 판단한다는 것이다. 이렇게 하면 설령 공격자가 상황에 따라 자신들의 attestation을 제어하더라도 정상적인 블록 생성자의 블록으로 canonical 체인을 형성할 수 있다.  
 
 
 3. 비콘체인의 7-block reorg "사건(incident)"  
