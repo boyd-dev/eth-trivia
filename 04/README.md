@@ -16,3 +16,8 @@ Lido는 나중에 이더로 환매할 수 있는 "유동화" 토큰인 "stETH"�
 
    Lido가 이더리움 지분증명에 기여하는 바가 없지는 않지만 중앙화된 주체의 지분 비율이 계속 늘어나고 또 stETH의 발행으로 인한 여러 파생 상품들의 잠재된 위험은 이더리움 생태계의 건전성과는 무관한 것이 사실이다. 이더리움에서는 Lido가 자체적으로 스테이킹 비율의 상한을 33% 미만으로 강제해야 한다고 주장했지만 Lido DAO는 "self-limiting" [안건](https://snapshot.org/#/lido-snapshot.eth/proposal/0x10abedcc563b66b1adee60825e78c387105110fa4a1e7354ab57bc9cc1e675c2)에 대해 99%가 반대했다. Lido 외의 다른 스테이킹 서비스들(RocketPool, Stakewise 등)은 22% 미만으로 제한하는 것에 동의했다.
 
+
+2. 
+
+
+[Home](../README.md)
