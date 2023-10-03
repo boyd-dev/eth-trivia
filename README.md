@@ -40,6 +40,7 @@
 
 - [이더리움 토막상식(3-1)](https://github.com/boyd-dev/eth-trivia/tree/main/04)
   - Lido의 점유율 문제  
+  - 검증자 증가에 따른 문제
 
 
 - [영지식증명 스도쿠](https://github.com/boyd-dev/eth-trivia/tree/main/03)
