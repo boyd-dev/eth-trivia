@@ -42,6 +42,7 @@
   - Lido의 점유율 문제  
   - 검증자 증가에 따른 문제
   - 롤업 Escape Hatch
+  - 트랜잭션 서명과 RPC 전송
 
 
 - [영지식증명 스도쿠](https://github.com/boyd-dev/eth-trivia/tree/main/03)
