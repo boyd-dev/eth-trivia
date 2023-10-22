@@ -45,7 +45,7 @@ Escape Hatch는 L2가 탈중앙화 되어 있다면 필요하지 않을 수 있�
    ```
    {nonce, type, from, to, gasLimit, maxFeePerGas, maxPriorityFeePerGas, value, data, chainId }
    ```
-   알케미와 같은 프로바이더들은 위의 RPC들을 직접 제공하지 않는 경우가 대부분이다. 왜냐하면 RPC 호출을 하지 않아도 ethers와 같은 라이브러리를 통해 얼마든지 서명을 할 수 있기 때문이다. 더구나 서명 키를 전달해야 하는 이것은 보안적으로 매우 위험한 일이다.  
+   알케미와 같은 프로바이더들은 위의 RPC들을 직접 제공하지 않는 경우가 대부분이다. 왜냐하면 RPC 호출을 하지 않아도 ethers와 같은 라이브러리를 통해 얼마든지 서명을 할 수 있기 때문이다. 더구나 개인키를 파라미터로 전달해야 하는데 이것은 보안적으로 매우 위험한 일이다.  
 
 
    ethers(v5.7) 에서는 아래와 같이 `signMessage(message)`를 이용하여 서명할 수 있다.  
