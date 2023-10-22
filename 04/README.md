@@ -32,17 +32,18 @@ L2의 거래를 실제 실행시켜 주는 것은 시퀀서들이다. 현재(202
 Escape Hatch는 L2가 탈중앙화 되어 있다면 필요하지 않을 수 있다. 왜냐하면 단 하나의 정직한 시퀀서가 살아 있다면(또 충분한 컴퓨팅 리소스가 제공된다면) L2의 거래는 항상 처리될 것이기 때문이다.  
 
 
-4. 트랜잭션 관련 RPC  
+4. 전자서명과 트랜잭션  
 이더리움은 ECDSA를 사용하여 트랜잭션에 "EOA" 계정(Externally Owned Account)으로 서명한다. EOA라는 이름에서 알 수 있는 것처럼 계정은 이더리움 네트워크에 연결하지 않아도 오프라인에서 만들 수 있다. 그래서 거래 메시지를 오프라인에서 서명하고 그 데이터(트랜잭션)를 나중에 이더리움에 전송할 수 있다. 서명을 위해서는 당연히 EOA 계정의 개인키가 필요하다.  
 이더리움 클라이언트 JSON-RPC가 제공하는 서명을 위한 메소드는 3가지 정도가 있다.  
     - eth_sign
     - personal_sign
     - eth_signTransaction  
 
-   JSON-RPC는 사용 목적에 따라 네임스페이스가 정해져 있는데 앞에 붙은 `eth_`와 `personal_` 은 각각 `eth` 네임스페이스와 `personal` 네임스페이스에 속해 있다는 것을 의미한다(`personal`은 현재 deprecated). 두 메소드는 모두 일반적인 메시지를 해시한 후 EOA 계정으로 서명하는 용도이다. 임의의 데이터를 `keccak256` 해시하여 32바이트를 만든 후에 서명하므로 서명된 결과는 모두 길이가 65바이트로 같다.  
+   JSON-RPC는 사용 목적에 따라 네임스페이스가 정해져 있는데 앞에 붙은 `eth_`와 `personal_` 은 각각 `eth` 네임스페이스와 `personal` 네임스페이스에 속해 있다는 것을 의미한다(`personal`은 현재 deprecated). 두 메소드는 모두 일반적인 메시지를 해시한 후 EOA 계정으로 서명하는 용도이다. 임의의 데이터를 `keccak256` 해시하여 32바이트를 만든 후에 서명하므로 서명된 결과는 모두 길이가 65바이트로 같다. 서명 전에 해시 하기 전의 메시지를 표시하려면 `personal_sign`을 사용한다.  
+
    `eth_signTransaction`은 특별히 트랜잭션 데이터를 서명할 때 사용한다. 파라미터로 트랜잭션 객체를 전달한다.  
    ```
-   {nonce, from, to, gasLimit, maxFeePerGas, maxPriorityFeePerGas, value, data, chainId }
+   {nonce, type, from, to, gasLimit, maxFeePerGas, maxPriorityFeePerGas, value, data, chainId }
    ```
    알케미와 같은 프로바이더들은 위의 RPC들을 직접 제공하지 않는 경우가 대부분이다. 왜냐하면 RPC 호출을 하지 않아도 ethers와 같은 라이브러리를 통해 얼마든지 서명을 할 수 있기 때문이다. 더구나 서명 키가 클라이언트에 있어야 하는데 개인들이 자신의 키를 다른 클라이언트에 저장해 놓는다는 것은 말이 되지 않는다.  
 
@@ -69,7 +70,11 @@ Escape Hatch는 L2가 탈중앙화 되어 있다면 필요하지 않을 수 있�
    ```
    ethers는 라이브러리에서 자동으로 메시지 앞에 `\x19Ethereum Signed Message:\n`라는 prefix를 추가하여 다시 해시한다. 이것은 애플리케이션에서 사용자들에게 일반 메시지로 위장한 트랜잭션 서명을 유도하여 자금을 인출하는 경우를 막기 위해 트랜잭션과 일반 메시지의 서명을 구분하려는 목적이 있다. 서명된 메시지를 솔리디티의 `ecrecover`에서 확인하기 위해서는 prefix가 있는 메시지를 해시하여 전달해야 한다.  
 
-   ethers에서 트랜잭션 서명은 `signTransaction(transactionRequest)`을 사용해야 한다. 리턴 값은 raw 트랜잭션으로 이 데이터는 RPC 호출 `eth_sendRawTransaction`으로 전송할 수 있다. 보통은 애플리케이션에 지갑과 연결되어 있으므로 트랜잭션 서명 데이터를 만들 필요도 없이 `sendTransaction`을 사용하여 지갑에서 서명한 후 트랜잭션을 전송할 수 있다.  
+   ethers에서 트랜잭션 서명은 `signTransaction(transactionRequest)`을 사용하면 raw 트랜잭션을 생성할 수 있다. 보통은 애플리케이션에 지갑이 연결되어 있으므로 트랜잭션 서명 데이터를 만들 필요 없이 `signer.sendTransaction`을 사용하여 지갑에서 서명하면 트랜잭션을 전송할 수 있다. 서명된 raw 트랜잭션은 RPC 호출 `eth_sendRawTransaction`을 사용하여 전송할 수도 있다.  
+   
+   서명하기 전에 해시된 메시지가 표시되는 경우 사용자가 어떤 내용인지 알 수 없기 때문에 이를 보완하기 위해 [EIP-712 Typed structured data hashing and signing](https://eips.ethereum.org/EIPS/eip-712)가 채택되었다. EIP-712 예제는 [여기](https://github.com/boyd-dev/sample-sign712)를 참조  
+
+5. 
 
 
 [Home](../README.md)
