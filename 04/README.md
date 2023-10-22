@@ -104,7 +104,11 @@ Escape Hatch는 L2가 탈중앙화 되어 있다면 필요하지 않을 수 있�
    ```
    const signedRawTx = ethers.utils.serializeTransaction(p, signature);
    ```
-   여기서 `signature`는 `{r,s,v}`를 하나의 문자열로 연결한 65바이트 서명이다.
+   여기서 `signature`는 `{r,s,v}`를 하나의 문자열로 연결한 65바이트 서명이다. `signedRawTx`을 다시 트랜잭션 객체로 복원하려면 `parseTransaction`을 사용한다.
+   ```
+   const tx = ethers.utils.parseTransaction("0x02f8720568843b9aca008504a817c80082520894547d73355a851079e0395adb2c647821b74c7eaf870aa87bee53800080c080a096d1c0f4a2bbc981739e2744ffc562b3c297688eb1bf901f95f3039355e8b044a054d0fb8c480e9721b4406fe64a957c5f7c79b81385aaacda1b8dd9dce342c775");
+   console.log(tx);
+   ```
 
 5. 
 
