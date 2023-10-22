@@ -34,7 +34,7 @@ Escape Hatch는 L2가 탈중앙화 되어 있다면 필요하지 않을 수 있�
 
 4. 전자서명과 트랜잭션  
 이더리움은 ECDSA를 사용하여 트랜잭션에 "EOA" 계정(Externally Owned Account)으로 서명한다. EOA라는 이름에서 알 수 있는 것처럼 계정은 이더리움 네트워크에 연결하지 않아도 오프라인에서 만들 수 있다. 그래서 거래 메시지를 오프라인에서 서명하고 그 데이터(트랜잭션)를 나중에 이더리움에 전송할 수 있다. 서명을 위해서는 당연히 EOA 계정의 개인키가 필요하다.  
-이더리움 클라이언트 JSON-RPC가 제공하는 서명을 위한 메소드는 3가지 정도가 있다.  
+이더리움 클라이언트의 JSON-RPC가 제공하는 서명 메소드는 3가지 정도가 있다.  
     - eth_sign
     - personal_sign
     - eth_signTransaction  
@@ -45,10 +45,10 @@ Escape Hatch는 L2가 탈중앙화 되어 있다면 필요하지 않을 수 있�
    ```
    {nonce, type, from, to, gasLimit, maxFeePerGas, maxPriorityFeePerGas, value, data, chainId }
    ```
-   알케미와 같은 프로바이더들은 위의 RPC들을 직접 제공하지 않는 경우가 대부분이다. 왜냐하면 RPC 호출을 하지 않아도 ethers와 같은 라이브러리를 통해 얼마든지 서명을 할 수 있기 때문이다. 더구나 서명 키가 클라이언트에 있어야 하는데 개인들이 자신의 키를 다른 클라이언트에 저장해 놓는다는 것은 말이 되지 않는다.  
+   알케미와 같은 프로바이더들은 위의 RPC들을 직접 제공하지 않는 경우가 대부분이다. 왜냐하면 RPC 호출을 하지 않아도 ethers와 같은 라이브러리를 통해 얼마든지 서명을 할 수 있기 때문이다. 더구나 서명 키를 전달해야 하는 이것은 보안적으로 매우 위험한 일이다.  
 
 
-   ethers.js v5.7 에서는 아래와 같이 `signMessage(message)`를 이용하여 서명할 수 있다.  
+   ethers(v5.7) 에서는 아래와 같이 `signMessage(message)`를 이용하여 서명할 수 있다.  
    ```
    const privateKey = "...";
    const provider = new ethers.providers.JsonRpcProvider("...");
@@ -70,9 +70,9 @@ Escape Hatch는 L2가 탈중앙화 되어 있다면 필요하지 않을 수 있�
    ```
    ethers는 라이브러리에서 자동으로 메시지 앞에 `\x19Ethereum Signed Message:\n`라는 prefix를 추가하여 다시 해시한다. 이것은 애플리케이션에서 사용자들에게 일반 메시지로 위장한 트랜잭션 서명을 유도하여 자금을 인출하는 경우를 막기 위해 트랜잭션과 일반 메시지의 서명을 구분하려는 목적이 있다. 서명된 메시지를 솔리디티의 `ecrecover`로 확인하려면 prefix가 있는 메시지를 해시하여 전달해야 한다.  
 
-   ethers에서 트랜잭션 서명은 `signTransaction(transactionRequest)`을 사용하면 raw 트랜잭션을 생성할 수 있다. 보통은 애플리케이션에 지갑이 연결되어 있으므로 트랜잭션 서명 데이터를 만들 필요 없이 `signer.sendTransaction`을 사용하여 지갑에서 서명하면 트랜잭션을 전송할 수 있다. 서명된 raw 트랜잭션은 RPC 호출 `eth_sendRawTransaction`을 사용하여 전송할 수도 있다.  
+   ethers에서 트랜잭션 서명은 `signTransaction(transactionRequest)`을 사용한다. 보통은 애플리케이션에 지갑이 연결되어 있으므로 트랜잭션 서명 데이터를 만들 필요 없이 `signer.sendTransaction`을 사용하고 지갑에서 서명하면 트랜잭션을 전송할 수 있다. 서명된 raw 트랜잭션은 이더리움 클라이언트의 JSON-RPC 호출 `eth_sendRawTransaction`으로도 전송할 수 있다.  
    
-   서명하기 전에 해시된 메시지가 표시되는 경우 사용자가 어떤 내용인지 알 수 없기 때문에 이를 보완하기 위해 [EIP-712 Typed structured data hashing and signing](https://eips.ethereum.org/EIPS/eip-712)가 채택되었다. EIP-712 예제는 [여기](https://github.com/boyd-dev/sample-sign712)를 참조  
+   서명하기 전에 해시된 메시지가 표시되는 경우 사용자가 어떤 내용인지 알 수 없기 때문에 이를 보완하기 위해 [EIP-712: Typed structured data hashing and signing](https://eips.ethereum.org/EIPS/eip-712)가 채택되었다. EIP-712 예제는 [여기](https://github.com/boyd-dev/sample-sign712)를 참조  
 
    이더리움의 트랜잭션은 트랜잭션 객체의 RLP 인코딩과 그것을 해시한 전자서명으로 구성된다. 예를 들어 아래와 같은 트랜잭션 객체가 있다고 하면
    ```
