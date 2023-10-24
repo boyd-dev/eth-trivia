@@ -166,7 +166,7 @@ attest를 하지 않아서 소량의 이더가 차감되는 것과는 다르게 
 L2의 거래 내역들은 가능하면 많은 데이터들을 압축한 바이너리 데이터이고 이 데이터를 암호학적인 방법을 통해 타원 곡선 위의 점들로 표현하는 다항식 "commitment"를 만들어서 비콘 블록에 저장한다. 마치 머클 루트를 트랜잭션 루트 해시에 저장한 것과 유사하다고 할 수 있다. KZG commitment 그 자체는 10여년이 지난 암호학 이론으로 난해하기 때문에 비탈릭 부테린은 이것을 그냥 "black box special-purpose hash function"이라고 이해하면 된다고 말하고 있다.  
 원래 KZG commitment는 "Non-interactive" 영지식 증명에 사용할 수 있는 암호학적 도구로, 여기서 Non-interactive는 prover와 verifier가 서로 데이터를 주고 받지 않아도 commitment를 확인할 수 있는 방식을 말하는데 이더리움처럼 불특정 다수가 참여하여 어떤 데이터를 각자 검증하는 상황에서 적합하다고 할 수 있다.  
 그런데 KZG commitment는 "trusted setup"이라는 과정을 거쳐야만 prover가 만든 증명을 신뢰할 수 있다는 전제가 있다. 따라서 초기에 불특정 다수(prover와 verifier 모두)가 비밀 키를 생성하는 "ceremony"를 수행해야 하고 이것을 "KZG ceremony"라고 부른다. trusted setup에 대한 좀더 직관적인 설명은 [스도쿠에 비유한 글](https://github.com/boyd-dev/eth-trivia/blob/main/03)을 참조.  
-실제로 이더리움에서는 EIP-4844에 사용하기 위해 KZG ceremony를 2022년 11월부터 진행했으며 약 14만명이 [참여](https://ceremony.ethereum.org/)했다. 물론 각 참여자들이 독립적인 주체인지는 알 수 없지만 MPC의 형태로 진행되기 때문에 단 한 명의 정직한 참여자가 있다면 생성된 비밀 키는 안전하다고 할 수 있다.  
+실제로 이더리움에서는 EIP-4844에 사용하기 위해 KZG ceremony를 2022년 11월부터 진행했으며 약 14만이 [참여](https://ceremony.ethereum.org/)했다. 물론 각 참여자들이 독립적인 주체인지는 알 수 없지만 MPC의 형태로 진행되기 때문에 단 한 명의 정직한 참여자가 있다면 생성된 비밀 키는 안전하다고 할 수 있다.  
 
 
 [Home](../README.md)
