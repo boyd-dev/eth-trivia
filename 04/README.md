@@ -120,9 +120,64 @@ EIP-1559는 2021년 8월 런던 하드포크에 적용된 "fee market" 즉 가�
 
    1559 이전에는 모든 수수료가 블록 생성자에게 지급되었지만 이제는 기본 수수료가 소각된다. 따라서 블록 생성자에게 돌아가는 트랜잭션 처리 수수료는 ɑ에 해당하는 priority fee 뿐이다(덕분에 다른 수익원인 MEV에 대한 중요도가 높아졌다). 1559의 소각과 지분증명 전환으로 인해 신규 이더의 발행량이 실질적으로 마이너스가 되기 때문에 이더리움을 ["ultra sound money"](https://ultrasound.money)라고 말하기도 한다.  
 
-   트랜잭션 항목에도 기존의 `gasPrice`는 의미가 없어졌고 대신 `maxFeePerGas`와 `maxPriorityFeePerGas`라는 항목이 추가되었다. `maxFeePerGas`는 사용자가 부담할 수 있는 최대 가스비이고 `maxPriorityFeePerGas`는 priority fee에 해당한다. 기본 수수료가 `maxFeePerGas`보다 작은 경우, 기본 수수료+ɑ가 `maxFeePerGas` 미만이라면 기본 수수료+`maxPriorityFeePerGas`만을 내면 된다. 기본 수수료+ɑ가 `maxFeePerGas`이상이면 `maxFeePerGas`만 부담한다. 그러나 기본 수수료 자체가 `maxFeePerGas`보다 크면 `maxFeePerGas` 아래도 떨어질 때까지 pending 상태로 머물러 있게 된다. 따라서 사용자는 자신의 트랜잭션이 pending 되는 것을 선택하거나 아니면 나중에 보낼 것인지 판단할 수 있는 여지가 생긴다.  
+   트랜잭션 항목에도 기존의 `gasPrice`는 의미가 없어지고 대신 `maxFeePerGas`와 `maxPriorityFeePerGas`라는 항목이 추가되었다. `maxFeePerGas`는 사용자가 부담할 수 있는 최대 가스비이고 `maxPriorityFeePerGas`는 priority fee에 해당한다. 기본 수수료가 `maxFeePerGas`보다 작은 경우, 기본 수수료+ɑ가 `maxFeePerGas` 미만이라면 기본 수수료+`maxPriorityFeePerGas`만을 내면 된다. 기본 수수료+ɑ가 `maxFeePerGas`이상이면 `maxFeePerGas`만 부담한다. 그러나 기본 수수료 자체가 `maxFeePerGas`보다 크면 `maxFeePerGas` 아래로 떨어질 때까지 pending 상태로 머물러 있게 된다. 따라서 사용자는 트랜잭션이 pending 되는 것을 선택하거나 아니면 나중에 보낼 것인지 판단할 수 있다.  
 
-   다음 블록의 기본 수수료는 현재 블록에서 계산될 수 있다. 또 `eth_gasPrice` 대신에 `eth_feeHistory` JSON-RPC를 사용하면 적절한 priority fee를 결정할 수 있는 데이터를 얻을 수 있다.  
+   다음 블록의 기본 수수료는 현재 블록에서 계산될 수 있다. 또 JSON-RPC `eth_gasPrice` 대신에 `eth_feeHistory`를 사용하면 다음 블록의 기본 수수료와 적절한 priority fee를 결정하는데 참고할 수 있는 데이터를 얻을 수 있다. 
+   
+   ```
+   eth_feeHistory(blockCount, lastBlock, [reward percentile])
+   ```
+   `lastBlock`을 포함하여 `blockCount` 만큼의 이전 블록까지 기본 수수료를 조회한다. 예를 들어 `blockCount`가 3이고 `lastBlock`이 `latest`라면 현재 블록과 그 이전 3개 블록의 기본 수수료를 조회하게 된다. `[reward percentile]`이란 각 블록에 저장된 트랜잭션들의 priority fee를 알아보기 위한 것으로 백분율 순위와 유사한 fee를 조회할 수 있다. 예를 들어 `[0, 100]`이라고 하면 각 블록에 대해서 가장 낮은 fee와 가장 높은 fee를 배열로 리턴한다.  
+   아래는 블록번호 [4578331](https://sepolia.etherscan.io/block/4578331)에 대하여 가장 낮은 fee, 중간 fee, 가장 높은 fee를 조회한다(단위는 wei).  
+
+   ```
+   {
+    "jsonrpc": "2.0",
+    "method": "eth_feeHistory",
+    "params": [
+        1,
+        "0x45DC1B",
+        [
+            0,
+            50,
+            100
+        ]                     
+    ],
+    "id": 1
+   }
+
+   {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+        "oldestBlock": "0x45dc1b",
+        "reward": [
+            [
+                "0x2fb5",
+                "0x3b9aca00",
+                "0x7735c3b5"
+            ]
+        ],
+        "baseFeePerGas": [
+            "0xa",
+            "0x9"
+        ],
+        "gasUsedRatio": [
+            0.0179848
+        ]
+    }
+   }
+   ```
+   그런데 `percentile`에서 지정하는 것은 단지 어느 수준의 fee 를 말하는 것이 아니라 블록의 가스 사용량을 차지하는 누적 비율을 의미하는 것으로, 그 비율 이상을 만드는 트랜잭션의 priority fee를 의미한다.
+
+   ```
+   targetGas = rewardPercentile * block.gasUsed / 100  
+   sumGas = 0
+   for tx = range sortedTxs
+	   sumGas += tx.gasUsed
+	   if targetGas <= sumGas
+		   return tx.minerReward
+   ```  
 
 
 6. 
