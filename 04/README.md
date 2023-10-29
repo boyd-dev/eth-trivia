@@ -127,7 +127,7 @@ EIP-1559는 2021년 8월 런던 하드포크에 적용된 "fee market" 즉 가�
    ```
    eth_feeHistory(blockCount, lastBlock, [reward percentile])
    ```
-   `lastBlock`을 포함하여 `blockCount` 만큼의 이전 블록까지 기본 수수료를 조회한다. 예를 들어 `blockCount`가 3이고 `lastBlock`이 `latest`라면 현재 블록과 그 이전 3개 블록의 기본 수수료를 조회하게 된다. `[reward percentile]`이란 각 블록에 저장된 트랜잭션들의 priority fee를 알아보기 위한 것으로 fee의 백분율 순위와 유사한 결과를 얻을 수 있다. 예를 들어 `[0, 100]`이라고 하면 각 블록에 대해서 가장 낮은 fee와 가장 높은 fee를 배열로 리턴한다.  
+   `lastBlock`을 포함하여 `blockCount` 만큼의 이전 블록까지 기본 수수료를 조회한다. 예를 들어 `blockCount`가 3이고 `lastBlock`이 `latest`라면 현재 블록과 그 이전 3개 블록의 기본 수수료를 조회하고 마지막 값은 다음 블록의 기본 수수료를 나타낸다. `[reward percentile]`이란 각 블록에 저장된 트랜잭션들의 priority fee를 알아보기 위한 것으로 fee의 백분율 순위와 유사한 결과를 얻을 수 있다. 예를 들어 `[0, 100]`이라고 하면 각 블록에 대해서 가장 낮은 fee와 가장 높은 fee를 배열로 리턴한다.  
    아래는 블록번호 [4578331](https://sepolia.etherscan.io/block/4578331)에 대하여 가장 낮은 fee, 중간 fee, 가장 높은 fee를 조회한다(단위는 wei).  
 
    ```
