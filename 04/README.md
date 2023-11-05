@@ -181,6 +181,54 @@ EIP-1559는 2021년 8월 런던 하드포크에 적용된 "fee market" 즉 가�
    ```  
 
 
-6. 
+6. 블롭 트랜잭션  
+Deneb/Cancun 하드포크의 EIP-4844에서는 새로운 타입(0x03) "블롭 트랜잭션"이 도입된다. 이것은 일반적인 송금이나 스마트 컨트랙트 실행 트랜잭션이 아니라 L2 거래정보를 담은 데이터를 비콘 체인의 "Blobspace"에 저장하기 위한 트랜잭션이다. 따라서 일반적으로 이 트랜잭션을 보내는 주체는 L2의 시퀀서들이 될 가능성이 높다. 블롭 트랜잭션은 다른 수수료 체계를 따르게 되므로 현재 이더리움의 가스비와는 다르게, 훨씬 저렴하게 책정될 것이다. 하지만 이 경우에 네트워크를 일부러 지연시키려는 DoS 공격의 위험성이 있으므로 블롭이 없는 대량의 트랜잭션을 어떻게 효과적으로 막을 것인가에 대한 문제도 중요한 이슈가 된다.  
+
+   아비트럼의 경우 시퀀서가 데이터를 보내는 L1의 ["inbox" 컨트랙트](https://etherscan.io/address/0x1c479675ad559DC151F6Ec7ed3FbF8ceE79582B6)를 보면 대략 7-8분 간격으로 다수의 배치 트랜잭션을 보내며 한 트랜잭션의 input data 크기는 9K 정도로 4-5개의 트랜잭션이 한번에 전송된다.
+
+   현재 [스펙](https://eips.ethereum.org/EIPS/eip-4844)에 의하면 이론적으로 블롭 트랜잭션에 의해 운반되는 블롭의 최대 개수는 `2**12`까지 가능하지만 초기에는 블록당 블롭을 3-6개를 목표로 하고 있다. 블롭 한 개의 크기가 128KB이므로 비콘 블록에는 최대 0.75MB의 블롭 데이터가 더 추가되는 셈이다(블롭의 개수는 아직 논의 중이고 유동적이다).
+
+   블롭 트랜잭션은 실행 계층에서 전송되기 때문에 일반 트랜잭션과 매우 유사하다. 하지만 트랜잭션 풀은 일반 트랜잭션 풀과 구분되어 있고 "데이터(블롭) 가스"에 의해 수수료가 정해진다.
+   ```
+   [chain_id, nonce, max_priority_fee_per_gas, max_fee_per_gas, gas_limit, to, value, data, access_list, max_fee_per_blob_gas, blob_versioned_hashes, v, r, s]
+   ```
+   블롭 트랜잭션이 실어나르는 블롭들 자체의 유효성은 각 블롭의 KZG commitment를 계산한 후 그것을 해시하여 `blob_versioned_hashes` 배열에 넣어 전송한다. 블롭 트랜잭션 역시 EL payload의 트랜잭션 목록 `transactions`에 들어가지만 블롭 데이터 그 자체는 트랜잭션 안에 포함되지는 않는다.  
+
+   ```
+   class ExecutionPayload(Container):
+    # Execution block header fields
+    parent_hash: Hash32
+    ...
+    block_hash: Hash32  # Hash of execution block
+    transactions: List[Transaction, MAX_TRANSACTIONS_PER_PAYLOAD]
+    ...
+    blob_gas_used: uint64  # [New in Deneb:EIP4844]
+    excess_blob_gas: uint64  # [New in Deneb:EIP4844]
+   ```
+   블롭이 사용한 데이터 가스는 `blob_gas_used`라는 항목에 저장된다. `excess_blob_gas`은 이전 블록들이 누적한 데이터 가스 총량이 `TARGET_BLOB_GAS_PER_BLOCK`을 어느 정도 초과했는지 나타내며 이 값을 블롭 가스의 수수료를 계산하는데 사용한다. 블록에는 각 블롭의 commitment 해시만이 저장되므로 EVM에서는 그 해시만을 알 수 있다.  
+
+   실제 블롭 데이터는 비콘 체인에 저장된다. 비콘 블록 바디에는 각 블롭들의 commitment가 `blob_kzg_commitments` 배열에 저장되어 있고 실제 블롭 데이터들은 바디가 아닌 "사이드카(sidecar)" 형태로 "Blobspace"에 저장되고 전파된다. 
+   ```
+   class BeaconBlockBody(Container):
+    ...
+    # Execution
+    execution_payload: ExecutionPayload  # [Modified in Deneb:EIP4844]
+    bls_to_execution_changes: List[SignedBLSToExecutionChange, MAX_BLS_TO_EXECUTION_CHANGES]
+    blob_kzg_commitments: List[KZGCommitment, MAX_BLOB_COMMITMENTS_PER_BLOCK]  # [New in Deneb:EIP4844]
+   ```
+   사이드카는 블롭 데이터와 commitment, 비콘 블록 헤더 등을 포함한 블롭 객체의 리스트가 된다.
+   ```
+   class BlobSidecar(Container):
+    index: BlobIndex  # Index of blob in block
+    blob: Blob
+    kzg_commitment: KZGCommitment
+    kzg_proof: KZGProof  # Allows for quick verification of kzg_commitment
+    signed_block_header: SignedBeaconBlockHeader
+    kzg_commitment_inclusion_proof: Vector[Bytes32, KZG_COMMITMENT_INCLUSION_PROOF_DEPTH]
+   ``` 
+   [BlobSidecar](https://github.com/ethereum/consensus-specs/blob/dev/specs/deneb/validator.md#constructing-the-blobsidecars)
+
+   이렇게 만들어진 비콘 블록과 그에 딸린 블롭 사이드카는 매 슬롯마다 전파되고 검증자들의 확인을 거쳐 비콘 체인에 추가된다. 모든 노드들은 블롭 사이드카를 `MIN_EPOCHS_FOR_BLOB_SIDECARS_REQUESTS` 동안(현재 4096 epoch) 반드시 유지해야 하고 해당 블롭을 요청하면 그것을 리턴해야 한다.  
+
 
 [Home](../README.md)
