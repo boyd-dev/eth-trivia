@@ -226,7 +226,7 @@ Deneb/Cancun 하드포크의 EIP-4844에서는 새로운 타입(0x03) "블롭 �
     signed_block_header: SignedBeaconBlockHeader
     kzg_commitment_inclusion_proof: Vector[Bytes32, KZG_COMMITMENT_INCLUSION_PROOF_DEPTH]
    ``` 
-   [BlobSidecar](https://github.com/ethereum/consensus-specs/blob/dev/specs/deneb/validator.md#constructing-the-blobsidecars)
+   [BlobSidecar](https://github.com/ethereum/consensus-specs/blob/dev/specs/deneb/validator.md#constructing-the-blobsidecars) 스펙 참조.
 
    이렇게 만들어진 비콘 블록과 그에 딸린 블롭 사이드카는 매 슬롯마다 전파되고 검증자들의 확인을 거쳐 비콘 체인에 추가된다. 모든 노드들은 블롭 사이드카를 `MIN_EPOCHS_FOR_BLOB_SIDECARS_REQUESTS` 동안(현재 4096 epoch) 반드시 유지해야 하고 해당 블롭을 요청하면 그것을 리턴해야 한다.  
 
