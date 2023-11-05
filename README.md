@@ -44,6 +44,7 @@
   - 롤업 Escape Hatch
   - 전자서명과 트랜잭션  
   - EIP-1559
+  - 블롭 트랜잭션
 
 
 - [영지식증명 스도쿠](https://github.com/boyd-dev/eth-trivia/tree/main/03)
