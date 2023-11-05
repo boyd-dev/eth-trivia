@@ -207,7 +207,7 @@ Deneb/Cancun 하드포크의 EIP-4844에서는 새로운 타입(0x03) "블롭 �
    ```
    블롭이 사용한 데이터 가스는 `blob_gas_used`라는 항목에 저장된다. `excess_blob_gas`은 이전 블록들이 누적한 데이터 가스 총량이 `TARGET_BLOB_GAS_PER_BLOCK`을 어느 정도 초과했는지 나타내며 이 값을 블롭 가스의 수수료를 계산하는데 사용한다. 블록에는 각 블롭의 commitment 해시만이 저장되므로 EVM에서는 그 해시만을 알 수 있다.  
 
-   실제 블롭 데이터는 비콘 체인에 저장된다. 비콘 블록 바디에는 각 블롭들의 commitment가 `blob_kzg_commitments` 배열에 저장되어 있고 실제 블롭 데이터들은 바디가 아닌 "사이드카(sidecar)" 형태로 "Blobspace"에 저장되고 전파된다. 
+   실제 블롭 데이터는 비콘 체인에 저장된다. 비콘 블록 바디에는 각 블롭들의 commitment가 `blob_kzg_commitments` 배열에 저장되어 있고 블롭 데이터들은 바디가 아닌 "사이드카(sidecar)" 형태로 "Blobspace"에 저장되고 전파된다. 
    ```
    class BeaconBlockBody(Container):
     ...
