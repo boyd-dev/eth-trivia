@@ -45,6 +45,7 @@
   - 전자서명과 트랜잭션  
   - EIP-1559
   - 블롭 트랜잭션
+  - EIP-3074 vs ERC-4337
 
 
 - [영지식증명 스도쿠](https://github.com/boyd-dev/eth-trivia/tree/main/03)
