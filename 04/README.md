@@ -231,7 +231,7 @@ Deneb/Cancun 하드포크의 EIP-4844에서는 새로운 타입(0x03) "블롭 �
    이렇게 만들어진 비콘 블록과 그에 딸린 블롭 사이드카는 매 슬롯마다 전파되고 검증자들의 확인을 거쳐 비콘 체인에 추가된다. 모든 노드들은 블롭 사이드카를 `MIN_EPOCHS_FOR_BLOB_SIDECARS_REQUESTS` 동안(현재 4096 epoch) 반드시 유지해야 하고 해당 블롭을 요청하면 그것을 리턴해야 한다.  
 
 7. EIP-3074 vs ERC-4337  
-이더리움에서 "계정 추상화(Account Abstraction, AA)"는 사용자 UI/UX 관점에서 오랫동안 논의된 주제라고 할 수 있다. 이더리움의 "계정"은 타원곡선암호 기반으로 생성하고(오프체인에서 만들기 때문에 Externally Owned Account) ECDSA를 사용하여 트랜잭션에 서명한다. 여러 EIP들이 있었으며 대략 두 가지의 제안으로 압축되었고 그것이 바로 [EIP-3074](https://eips.ethereum.org/EIPS/eip-3074)와 [ERC-4337](https://eips.ethereum.org/EIPS/eip-4337)이다.  
+이더리움에서 "계정 추상화(Account Abstraction, AA)"는 사용자 UI/UX 관점에서 오랫동안 논의된 주제라고 할 수 있다. 이더리움의 "계정"은 타원곡선암호 기반으로 생성하고(오프체인에서 만들기 때문에 Externally Owned Account) ECDSA를 사용하여 트랜잭션에 서명한다. 계정 추상화에 대한 여러 EIP들이 있었으며 대략 두 가지의 제안으로 압축되었고 그것이 바로 [EIP-3074](https://eips.ethereum.org/EIPS/eip-3074)와 [ERC-4337](https://eips.ethereum.org/EIPS/eip-4337)이다.  
 
    현재는 ERC-4337이 사실상 표준으로 채택된 상태지만 최근 들어 다시 EIP-3074를 적용하자는 의견들이 많아지고 결국 2024년 하반기 예정인 "Pectra" 하드포크에 포함시키기로 잠정 [합의](https://twitter.com/TimBeiko/status/1778497101988835715)하기에 이른다. 이름에서 알 수 있는 것처럼 4337은 ERC로 하드포크 없이 적용되는 것이 가능하지만 3074는 EIP에 속하기 때문에 프로토콜의 변경이 필요하다.  
 
